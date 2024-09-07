@@ -1,1 +1,3 @@
-AUTH_SECRET= "my_secret"
+
+import { handlers } from "@/lib/auth"
+export const { GET, POST } = handlers
