@@ -9,10 +9,14 @@ type FormFields = {
 
 export default function Create(){
     
-   const { register , handleSubmit} = useForm <FormFields>()
+   const { register , handleSubmit , formState: {errors,isSubmitting}} = useForm <FormFields>()
 
-   const onSubmit: SubmitHandler<FormFields> = (data) =>{
-    console.log(data)
+   const onSubmit: SubmitHandler<FormFields> = async(data) =>{
+
+    await new Promise((resolve) => setTimeout( resolve , 2000));
+    console.log(data);
+    
+    
    }
 
      
@@ -25,12 +29,35 @@ export default function Create(){
             <div className="text-3xl font-bold text-cyan-500"> Create a Stream</div>
             
             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-6 border-s-violet-600">
-                <input {...register("email")} type="text" placeholder="email"/>
-                <input {...register("password")} type='text' placeholder="password"/>
+                <input {...register("email" ,{
+                    required: "Email is required",
+                    validate:(value) => {
+                        if(!value.includes("@")){
+                            return "Invalid email ,it must contain @"
+                        }
+                        return true;
+                    },
+                })} type="text" placeholder="email"/>
+
+                {errors.email && <div className="text-red-600">{errors.email.message}</div>} 
+
+                <input {...register("password",{
+                    required:"Password is required",
+                    minLength:{
+                        value:8,
+                        message:"Password must be at least 8 characters long"
+                        
+                    }
+                })} type='text' placeholder="password"/>
+
+                {errors.password && <div className="text-red-600">{errors.password.message}</div>}
 
                 <div className="flex gap-x-4 items-center">
 
-                <Button variant={"outline"} type="submit"> Submit</Button>
+                <Button variant={"outline"} disabled={isSubmitting} type="submit"> 
+              {  isSubmitting? "Loading..." : "Submit"}        
+            
+                    </Button>
                 <Button variant={"outline"} type="reset"> Reset</Button>
 
                 </div>
