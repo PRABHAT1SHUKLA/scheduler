@@ -28,7 +28,7 @@ export default async function Home() {
       <p> muzer gives a interactive experience to create customized streams for your experience . It can also act as your part DJ by playing the public's favourite based on the most upvoted song.</p>
       </div>
        {session? <Link href={`/createStream`} className={cn(buttonVariants({variant:"ghost"}),"w-full gaps-x-2")}>Create Stream</Link>:<Link href="/sign-in" className={cn(buttonVariants({variant:"ghost"}),"w-full gaps-x-2")}>LogIn to create Stream</Link>}
-     
+        
       </div>
      
     
