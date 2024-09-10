@@ -1,37 +1,22 @@
 "use client"
-import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import {SubmitHandler, useForm} from "react-hook-form"
+
+type FormFields = {
+    email: string,
+    password: string
+}
 
 export default function Create(){
     
-     const [url , setUrl] = useState("")
-     const [email , setEmail] = useState("")
-     const [password , setPassword] = useState("")
-     const [errors, setErrors] = useState<{email:string , password:string}>({
-        email:"",
-        password:""
-     })
+   const { register , handleSubmit} = useForm <FormFields>()
+
+   const onSubmit: SubmitHandler<FormFields> = (data) =>{
+    console.log(data)
+   }
+
      
-    function handleSubmit(e:React.FormEvent){
-        e.preventDefault()
-
-        setErrors({email:"" , password:""})
-
-        if(!email.startsWith("@")){
-            setErrors(prevErrors=>({...prevErrors , email:"Invalid email"}))
-            return
-        }
-
-        if(password.length<4){
-            setErrors(prevErrors=>({...prevErrors , password:"Password must be at least 4 characters"}))
-
-         return
-
-        }
-
-
-        console.log("form submitted")
-
-    }
+    
 
 
     return (
@@ -39,28 +24,19 @@ export default function Create(){
             
             <div className="text-3xl font-bold text-cyan-500"> Create a Stream</div>
             
-            <form onSubmit={handleSubmit} className="flex flex-col gap-y-4 divide-y divide-red-950">
-                <input
-                  placeholder="email"
-                  onChange={(e) => setEmail(e.target.value)}
-                  value={email}
-                  type="text"
-                  className=" border-blue-950"/>
+            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-6 border-s-violet-600">
+                <input {...register("email")} type="text" placeholder="email"/>
+                <input {...register("password")} type='text' placeholder="password"/>
 
-                  {errors.email && <div className="text-red-600">errors.email</div>}
+                <div className="flex gap-x-4 items-center">
 
-                  <input
-                  placeholder="password"
-                  onChange={(e) => setPassword(e.target.value)}
-                  value={password}
-                  type="text"
-                  className="max-w-5xl border-blue-950"/>
+                <Button variant={"outline"} type="submit"> Submit</Button>
+                <Button variant={"outline"} type="reset"> Reset</Button>
 
-                  {errors.password && <div className="text-red-600">errors.password</div>}
-
-                  <button type="submit">Submit</button>
-                
+                </div>
+               
             </form>
+          
   
          </div>
     )
