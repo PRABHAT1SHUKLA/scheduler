@@ -29,7 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en"
-    className=>
+    className= "text-slate-900 bg-white antialiased">
      
       <body
         className="bg-gradient-to-r from-gray-100 to-fuchsia-50 antialiased min-h-screen pt-16"
