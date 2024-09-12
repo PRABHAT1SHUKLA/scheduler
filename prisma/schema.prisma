@@ -80,8 +80,8 @@ model Weeklyavailability{
 
 model Timeslot{
   id          String @id @default(cuid())
-  start       DateTime
-  end         DateTime
+  start       String
+  end         String
   weeklyid    String  @default(cuid())
   weeklyavailability  Weeklyavailability @relation(fields: [weeklyid], references: [id])
 
