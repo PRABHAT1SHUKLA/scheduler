@@ -1,7 +1,8 @@
 import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 
-export async function GET(){
+export async function POST(req:Request){
+    const { dayOfWeek }= await req.json()
     const session = await getAuthSession()
 
     if(!session?.user){
@@ -10,15 +11,19 @@ export async function GET(){
         })
     }
 
-    const day = await db.weeklyavailability.findMany({
-        where:{
-            userId: session.user.id
-        }
-    })
+    const availabilities = await db.weeklyavailability.findMany({
+        where: {
+          userId: session.user.id,
+          dayOfWeek: dayOfWeek,
+        },
+        select: {
+          start: true,
+          end: true,
+        },
+      })
 
+      const fusk = JSON.stringify(availabilities)
     
 
-    return new Response(
-        `msg:${day[1].dayOfWeek}`
-    )
+    return new Response(fusk)
 }

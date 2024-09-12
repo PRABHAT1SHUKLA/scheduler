@@ -7,9 +7,9 @@ export async function POST(req: Request){
         console.log("hello")
         const body = await req.json()
        
-        const {day} = body
+        const {day , startTime , endTime} = body
 
-        console.log(day)
+       
 
        const session = await getAuthSession()
 
@@ -22,7 +22,10 @@ export async function POST(req: Request){
     await db.weeklyavailability.create({
         data:{
             dayOfWeek:day,
+            start: startTime,
+            end: endTime,
             userId: session.user.id
+
         }
     })
     return new Response("OK")
