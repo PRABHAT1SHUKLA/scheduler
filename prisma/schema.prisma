@@ -24,6 +24,7 @@ model User {
   sessions      Session[]
   availability  Weeklyavailability[]
   username      String?
+  override       Override[]
  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -79,3 +80,9 @@ model Weeklyavailability{
   updatedAt   DateTime @updatedAt
 }
 
+model Override{
+   id String @id @default(cuid())
+   date DateTime
+   userId String
+   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
