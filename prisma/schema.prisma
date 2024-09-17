@@ -80,9 +80,10 @@ model Weeklyavailability{
   updatedAt   DateTime @updatedAt
 }
 
+
 model Override{
    id String @id @default(cuid())
    date DateTime
    userId String
    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
+  }

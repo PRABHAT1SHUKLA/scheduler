@@ -16,23 +16,15 @@ export async function POST(req: Request){
         {
             status:401,
         }
-    ) 
+    )  }
 
     await db.override.create({
         data:{
-            date:date
+            date:date,
+            userId:session?.user.id
         }
-        where:{
-            user.id: session.userId
-        }
+        
     })
     
-    
-    
-    
-
-
-
-   }
 
 }
