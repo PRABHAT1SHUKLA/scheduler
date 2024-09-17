@@ -3,7 +3,7 @@ import { db } from "@/lib/db";
 
 export async function POST(req: Request){
 
-
+ try{
     const body = await req.json()
 
     const {date} = body
@@ -27,4 +27,10 @@ export async function POST(req: Request){
     })
     
 
+
+ }catch(error){
+    return new Response("fuck")
+
+ }
+    
 }
