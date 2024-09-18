@@ -85,5 +85,7 @@ model Override{
    id String @id @default(cuid())
    date DateTime
    userId String
+   start String
+   end   String
    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   }
