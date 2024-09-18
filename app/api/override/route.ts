@@ -18,15 +18,21 @@ export async function POST(req: Request){
         }
     )  }
 
-    await db.override.create({
-        data:{
-            date:date,
-            userId:session?.user.id
-        }
-        
-    })
+    console.log("ello")
+    if (!date || isNaN(Date.parse(date))) {
+        return new Response("Invalid date format", {
+          status: 400,
+        });
+      }
+  
+      await db.override.create({
+        data: {
+          date: new Date(date), // Ensure the date is correctly parsed as a JavaScript Date object
+          userId: session.user.id,
+        },
+      });
     
-
+    return new Response("OK")
 
  }catch(error){
     return new Response("fuck")
