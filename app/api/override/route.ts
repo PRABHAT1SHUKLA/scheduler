@@ -6,7 +6,7 @@ export async function POST(req: Request){
  try{
     const body = await req.json()
 
-    const {date} = body
+    const {date, start , end} = body
 
     const session = await getAuthSession()
 
@@ -28,6 +28,8 @@ export async function POST(req: Request){
       await db.override.create({
         data: {
           date: new Date(date), // Ensure the date is correctly parsed as a JavaScript Date object
+          start: start,
+          end: end,
           userId: session.user.id,
         },
       });
