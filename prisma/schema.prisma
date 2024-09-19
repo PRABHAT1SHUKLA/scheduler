@@ -26,6 +26,7 @@ model User {
   username      String?
   override       Override[]
   event          Event[]
+  bookings       Bookings[]
  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -117,3 +118,9 @@ model Bookings{
   status Status
 }
  
+
+enum Status{
+  PENDING
+  CONFIRMED
+  CANCELED
+} 
