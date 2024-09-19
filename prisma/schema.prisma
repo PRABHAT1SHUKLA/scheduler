@@ -105,4 +105,15 @@ enum Duration{
    MIN_30
    MIN_45
 }
+
+model Bookings{
+  id     String @id @default(cuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  client String
+  date   DateTime
+  start  String
+  end    String
+  status Status
+}
  
