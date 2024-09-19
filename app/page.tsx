@@ -27,7 +27,7 @@ export default async function Home() {
       <div className=" justify-between p-4 text-zinc-500 gap-x-4 max-w-2xl overflow-auto">
       <p> muzer gives a interactive experience to create customized streams for your experience . It can also act as your part DJ by playing the public's favourite based on the most upvoted song.</p>
       </div>
-       {session? <Link href={`/createStream`} className={cn(buttonVariants({variant:"ghost"}),"w-full gaps-x-2")}>Create Stream</Link>:<Link href="/sign-in" className={cn(buttonVariants({variant:"ghost"}),"w-full gaps-x-2")}>LogIn to create Stream</Link>}
+       {session? <Link href={`/createStream`} className={cn(buttonVariants({variant:"ghost"}),"w-full gaps-x-2")}></Link>:<Link href="/sign-in" className={cn(buttonVariants({variant:"ghost"}),"w-full gaps-x-2")}>LogIn to create Stream</Link>}
         
       </div>
      
