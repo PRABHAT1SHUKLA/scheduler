@@ -95,7 +95,7 @@ model Override{
 model Event{
   id          String @id @default(cuid())
   eventType   String
-  duration     Duration[]
+  duration    Duration
   userId      String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
