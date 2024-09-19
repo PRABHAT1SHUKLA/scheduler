@@ -89,3 +89,17 @@ model Override{
    end   String
    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   }
+
+
+model Event{
+  id          String @id @default(cuid())
+  eventType   String
+  duration     Duration[]
+}
+
+enum Duration{
+   MIN_15
+  MIN_30
+  MIN_45
+}
+ 
