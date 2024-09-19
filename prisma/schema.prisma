@@ -25,6 +25,7 @@ model User {
   availability  Weeklyavailability[]
   username      String?
   override       Override[]
+  event          Event[]
  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -95,11 +96,13 @@ model Event{
   id          String @id @default(cuid())
   eventType   String
   duration     Duration[]
+  userId      String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum Duration{
    MIN_15
-  MIN_30
-  MIN_45
+   MIN_30
+   MIN_45
 }
  
