@@ -112,7 +112,7 @@ model Bookings{
   userId String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   clientName String
-  clentEmail  String
+  clentEmail  String @unique
   date   DateTime
   start  String
   end    String

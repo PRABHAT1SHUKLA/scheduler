@@ -16,7 +16,8 @@ export async function POST(req:Request){
         data:{
             userId: userId,
             clientName: name,
-            client
+            clientEmail: email,
+            
         }
     })
 
