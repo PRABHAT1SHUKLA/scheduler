@@ -5,7 +5,7 @@ export async function POST(req:Request){
     try{
         const body = await req.json()
 
-    const {name , email , note , status ,date , start , end, userId} = body
+    const {name , email , note , status ,date , start , end , adminEmail} = body
 
     const session = await getAuthSession()
 
@@ -13,9 +13,19 @@ export async function POST(req:Request){
         return {status: 401, message: 'Unauthorized'}
     }
 
+
+    console.log("hello")
+    const admin = await db.user.findUnique({
+        where: {
+            email :  adminEmail,
+        }
+    })
+
+    console.log(admin)
+
     await db.bookings.create({
         data:{
-            userId: userId,
+            userId: JSON.stringify(admin?.id), 
             clientName: name,
             clientEmail: email,
             note: note,

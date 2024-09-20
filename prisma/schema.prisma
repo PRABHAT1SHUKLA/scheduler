@@ -118,7 +118,6 @@ model Bookings{
   end    String
   status  Status   @default(PENDING)
   note    String?
- 
 }
  
 
