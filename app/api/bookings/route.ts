@@ -2,7 +2,8 @@ import { getAuthSession } from "@/lib/auth"
 import { db } from "@/lib/db"
 
 export async function POST(req:Request){
-    const body = await req.json()
+    try{
+        const body = await req.json()
 
     const {name , email , note , status ,date , start , end, userId} = body
 
@@ -17,13 +18,24 @@ export async function POST(req:Request){
             userId: userId,
             clientName: name,
             clientEmail: email,
-            
+            note: note,
+            status: status,
+            date: date,
+            start: start,
+            end: end
+
         }
     })
 
 
     
-    
+    return new Response("OK")
+    }
+    catch(error){
+        return new Response("not able to book " , {
+            status:401
+        })
+    }
 
     
 }
