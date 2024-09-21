@@ -10,9 +10,9 @@ export async function POST(req:Request){
     const session = await getAuthSession()
 
     if(!session?.user){
-        return {
-            status: 401, message: 'Unauthorized'
-        }
+        return new Response(
+           "unaithorized"
+        )
     }
 
 
@@ -27,20 +27,19 @@ export async function POST(req:Request){
 
     const id = JSON.stringify(admin?.id)
 
+    console.log(id)
     await db.bookings.create({
         data:{
-            userId: id, 
+            userId: admin?.id, 
             clientName: name,
             clientEmail: email,
             note: note,
             status: status,
-            date: date,
+            date: new Date(date),
             start: start,
-            end: end,
-            
+            end: end
 
-
-        }
+       }
     })
 
 
