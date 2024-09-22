@@ -23,7 +23,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   availability  Weeklyavailability[]
-  username      String?
+  username      String?   @unique
   override       Override[]
   event          Event[]
   bookings       Bookings[]
@@ -70,7 +70,7 @@ model VerificationToken {
  
   @@id([identifier, token])
 }
-
+//todo : to make it more optimizable by including timeslot array as an array unde weklyavailability
 model Weeklyavailability{
   id          String @id @default(cuid())
   dayOfWeek    String

@@ -1,10 +1,12 @@
 import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 
-export async function POST(req: Request) {
+export async function POST(req: Request, {params}: { params: {username: string }}) {
   try {
+
+
     const body = await req.json();
-    const { name, email, note, status, date, start, end, adminEmail } = body;
+    const { name, email, note, status, date, start, end } = body;
 
     const session = await getAuthSession();
 
@@ -16,7 +18,7 @@ export async function POST(req: Request) {
     // Find admin by email
     const admin = await db.user.findUnique({
       where: {
-        email: adminEmail,
+        username: params.username
       },
     });
 
