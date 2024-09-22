@@ -1,4 +1,5 @@
-import { signOut } from "@/lib/auth"
+
+import { signOut } from "next-auth/react"
 import { redirect } from "next/dist/server/api-utils"
  
 export default function SignOut() {
@@ -11,7 +12,7 @@ export default function SignOut() {
     <form
       action={async () => {
         "use server"
-        await signOut()
+        await signOut
       }}
     >
       <button type="submit">SignOut </button>

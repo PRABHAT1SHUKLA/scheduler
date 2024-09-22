@@ -1,11 +1,11 @@
 
 
-import {  getAuthSession } from "@/lib/auth"
 import { Music } from "lucide-react"
 import Link from "next/link"
 import { Button } from "./ui/button"
 
 import Logout from "./LogOut"
+import { getAuthSession } from "../lib/auth"
 
 const Navbar = async() =>{
     const session = await getAuthSession()

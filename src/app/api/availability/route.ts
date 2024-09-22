@@ -1,63 +1,71 @@
-import { getAuthSession } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { getAuthSession } from "@/lib/auth"
+import { db } from "@/lib/db"
+import { NextResponse } from "next/server"
+
 
 //route handles admin request for availability creation
 export async function POST(req: Request) {
   try {
-    console.log("hello");
-    const body = await req.json();
-
-    const { day, startTime, endTime } = body;
-
-    const session = await getAuthSession();
+    const session = await getAuthSession()
 
     if (!session?.user) {
       return new Response("Unauthorizeed", {
-        status: 401,
-      });
+        status: 401
+      })
     }
+
+    const { day, startTime, endTime } = await req.json()
 
     await db.weeklyavailability.create({
       data: {
         dayOfWeek: day,
         start: startTime,
         end: endTime,
-        userId: session.user.id,
-      },
-    });
-    return new Response("OK");
-  } catch (error: any) {
-    return new Response(error);
+        userId: session.user.id
+      }
+    })
+    return new Response("OK")
+  }
+  catch (error: any) {
+    return new Response(error)
   }
 }
 
+
+
 export async function GET(req: Request) {
   try {
-    const { dayOfWeek } = await req.json();
-    const session = await getAuthSession();
+   
+    const session = await getAuthSession()
+
+
 
     if (!session?.user) {
       return new Response("Unauthorized", {
-        status: 401,
-      });
+        status: 401
+      })
     }
 
-    const availabilities = await db.weeklyavailability.findMany({
+    const user = await db.user.findFirst({
       where: {
-        userId: session.user.id,
-        dayOfWeek: dayOfWeek,
+        id: session.user.id,
       },
-      select: {
-        start: true,
-        end: true,
+      include: {
+        availability: true
       },
-    });
+    })
 
-    const fusk = JSON.stringify(availabilities);
-    console.log(dayOfWeek);
+    if(!user) {
+      return new Response ("user not found ", {
+        status: 404
+      })
+    }
 
-    return new Response(`${dayOfWeek}: ${fusk}`);
-  } catch (error: any) {
-    return new Response(error);
+    return NextResponse.json(user.availability)
+  }
+
+  catch (error: any) {
+    return new Response(error)
+
   }
 }
