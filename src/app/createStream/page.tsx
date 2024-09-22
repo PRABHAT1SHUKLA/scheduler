@@ -1,5 +1,5 @@
 "use client"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/src/components/ui/button"
 import {set, SubmitHandler, useForm} from "react-hook-form"
 import { z } from "zod"
 import {zodResolver} from "@hookform/resolvers/zod"
