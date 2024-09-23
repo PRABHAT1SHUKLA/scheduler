@@ -73,9 +73,10 @@ model VerificationToken {
 //todo : to make it more optimizable by including timeslot array as an array unde weklyavailability
 model Weeklyavailability{
   id          String @id @default(cuid())
-  dayOfWeek    String
+  dayOfWeek    Week
    start       String
   end         String
+  timeSlot    TimeSlot[]
   userId      String
   user         User    @relation(fields: [userId], references: [id] , onDelete: Cascade)
   createdAt   DateTime @default(now())
@@ -90,22 +91,20 @@ model Override{
    start String
    end   String
    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   }
 
 
 model Event{
   id          String @id @default(cuid())
+  eventTitle  String  
   eventType   String
-  duration    Duration
+  duration    Int
   userId      String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-enum Duration{
-   MIN_15
-   MIN_30
-   MIN_45
-}
+
 
 model Bookings{
   id     String @id @default(cuid())
@@ -126,3 +125,22 @@ enum Status{
   CONFIRMED
   CANCELED
 } 
+
+enum Week{
+   Monday
+   Tuesday
+   Wednesday
+   Thursday
+   Friday
+   Saturday
+   Sunday
+}
+
+model TimeSlot{
+  
+  id     String @id @default(cuid())
+  start  String
+  end    String
+  WeekId  String
+  daySlot   Weeklyavailability  @relation(fields: [WeekId], references: [id], onDelete:Cascade)
+}
