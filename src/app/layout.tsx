@@ -27,9 +27,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="text-slate-900 bg-white antialiased">
-      <body className="bg-gradient-to-r from-gray-100 to-fuchsia-50 antialiased min-h-screen pt-16">
+      <body className="bg-gradient-to-r from-gray-100 to-fuchsia-50 antialiased min-h-screen pt-4">
         <Providers>
-          <Navbar />
+          {/* <Navbar /> */}
           {children}
         </Providers>
       </body>

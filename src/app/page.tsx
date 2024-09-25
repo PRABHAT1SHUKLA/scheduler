@@ -1,34 +1,39 @@
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { getAuthSession } from "@/lib/auth"
+import { cn } from "@/lib/utils"
 import { Calendar, Clock, Users, Zap, Check } from "lucide-react"
 import Link from "next/link"
 
-export default function LandingPage() {
+export default async function  LandingPage() {
+
+  const session = await getAuthSession()
+
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="px-4 lg:px-6 h-14 flex items-center">
+      <header className="px-4 lg:px-6 h-14 flex items-center justify-between">
         <Link className="flex items-center justify-center" href="#">
           <Clock className="h-6 w-6 mr-2" />
-          <span className="font-bold text-lg">TameTime</span>
+          <span className="font-bold text-xl">TameTime</span>
         </Link>
-        <nav className="ml-auto flex gap-4 sm:gap-6">
-          <Link className="text-sm font-medium hover:underline underline-offset-4" href="#">
+        <nav className="m-auto flex gap-4 sm:gap-6  ">
+          <Link className="text-base font-bold hover:underline underline-offset-4" href="#">
             Features
           </Link>
-          <Link className="text-sm font-medium hover:underline underline-offset-4" href="#">
+          <Link className="text-base font-bold hover:underline underline-offset-4" href="#">
             Pricing
           </Link>
-          <Link className="text-sm font-medium hover:underline underline-offset-4" href="#">
+          <Link className="text-base font-bold hover:underline underline-offset-4" href="#">
             About
           </Link>
-          <Link className="text-sm font-medium hover:underline underline-offset-4" href="#">
+          <Link className="text-base font-bold hover:underline underline-offset-4" href="#">
             Contact
           </Link>
         </nav>
-
-        <div>
-          Signup
-        </div>
+        {session ? <Link href="/sign-in" 
+        className={cn(buttonVariants({variant: "outline"} ))}>Login</Link> :    <Link href="/sign-in" 
+        className={cn(buttonVariants({variant: "default"} ))}>Login</Link> }
+   
       </header>
       <main className="flex-1">
         <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">

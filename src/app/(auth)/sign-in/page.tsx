@@ -1,5 +1,5 @@
-import SignIn from "@/src/components/SignIn";
-import { Button, buttonVariants } from "@/src/components/ui/button";
+import SignIn from "@/components/SignIn";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, Ghost } from "lucide-react";
 import Link from "next/link";
