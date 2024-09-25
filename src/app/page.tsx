@@ -1,6 +1,7 @@
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { getAuthSession } from "@/lib/auth"
+import { UserAccontNav } from "@/components/UserAccountNav"
 import { cn } from "@/lib/utils"
 import { Calendar, Clock, Users, Zap, Check, ArrowBigRight } from "lucide-react"
 import Link from "next/link"
@@ -30,7 +31,7 @@ export default async function  LandingPage() {
             Contact
           </Link>
         </nav>
-        {session?.user ? " " :    <Link href="/sign-in" 
+        {session?.user ? <UserAccontNav user={session.user}/> :    <Link href="/sign-in" 
         className={cn(buttonVariants({variant: "default"} ))}>Login</Link> }
    
       </header>
