@@ -2,7 +2,7 @@ import { Button, buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { getAuthSession } from "@/lib/auth"
 import { cn } from "@/lib/utils"
-import { Calendar, Clock, Users, Zap, Check } from "lucide-react"
+import { Calendar, Clock, Users, Zap, Check, ArrowBigRight } from "lucide-react"
 import Link from "next/link"
 
 export default async function  LandingPage() {
@@ -30,8 +30,7 @@ export default async function  LandingPage() {
             Contact
           </Link>
         </nav>
-        {session ? <Link href="/sign-in" 
-        className={cn(buttonVariants({variant: "outline"} ))}>Login</Link> :    <Link href="/sign-in" 
+        {session?.user ? " " :    <Link href="/sign-in" 
         className={cn(buttonVariants({variant: "default"} ))}>Login</Link> }
    
       </header>
@@ -48,11 +47,20 @@ export default async function  LandingPage() {
                 </p>
               </div>
               <div className="space-x-4">
-                <Button>Get Started</Button>
+                <Button>Go To App <ArrowBigRight/></Button>
                 <Button variant="outline">Learn More</Button>
               </div>
             </div>
           </div>
+        </section>
+        <section className ="w-full py-14">
+      
+
+          <div className ="flex-1 text-lg text-emerald-800 flex gap-x-2 justify-center ">
+            <span className={cn(buttonVariants())}> YOUR </span> 
+            time is yours to decide.</div>
+     
+
         </section>
         <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800">
           <div className="container px-4 md:px-6">

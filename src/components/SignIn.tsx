@@ -19,8 +19,10 @@ export default function SignIn() {
 
   return (
     
+       <>
+         <button type="submit" onClick={login}>Signin with Google</button>
+       </>
     
-      <button type="submit" onClick={login}>Signin with Google</button>
     
   )
 } 
