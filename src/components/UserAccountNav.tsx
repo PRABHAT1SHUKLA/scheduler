@@ -4,6 +4,8 @@ import { DropdownMenu,DropdownMenuContent,DropdownMenuItem,DropdownMenuSeparator
 import { LogOut } from "lucide-react"
 import Logout from "./LogOut"
 import { User } from "next-auth"
+import { Avatar , AvatarImage,AvatarFallback} from "./ui/avatar"
+import Image from "next/image"
 
 interface userAccountNavProps extends React.HTMLAttributes<HTMLDivElement> {
 
@@ -15,11 +17,23 @@ export function  UserAccontNav({user}: userAccountNavProps){
   <>
     <DropdownMenu>
       
-      <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+      <DropdownMenuTrigger>
+      <Avatar>
+      <div className="relative aspect-square h-full w-full">
+                    <Image
+                        fill
+                        src={user.image}
+                        alt='profile picture'
+                        referrerPolicy='no-referrer' />
+                </div>
+      <AvatarFallback>CN</AvatarFallback>
+    </Avatar>
+        
+        </DropdownMenuTrigger>
       <DropdownMenuContent>
      <DropdownMenuItem>helllo</DropdownMenuItem>
      <DropdownMenuSeparator/>
-     <DropdownMenuItem>whtsup</DropdownMenuItem>
+     <DropdownMenuItem>whatsup</DropdownMenuItem>
      <DropdownMenuSeparator/>
      <DropdownMenuItem><LogOut/><Logout/></DropdownMenuItem>
   
