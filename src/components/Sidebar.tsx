@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Clock, User, Calendar, Settings, HelpCircle, LogOut } from 'lucide-react'
+import { Clock , HelpCircle, LogOut } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -16,11 +16,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
-const sidebarLinks = [
-  { icon: Calendar, label: 'Calendar', route: '/calendar' },
-  { icon: User, label: 'Contacts', route: '/contacts' },
-  { icon: Settings, label: 'Settings', route: '/settings' },
-]
+import { sidebarLinks } from '@/constants'
 
 export default function Sidebar() {
   const pathname = usePathname()
