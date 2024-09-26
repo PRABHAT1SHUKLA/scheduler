@@ -30,6 +30,9 @@ export default async function  LandingPage() {
           <Link className="text-base font-bold hover:underline underline-offset-4" href="#">
             Contact
           </Link>
+          <Link className="text-base font-bold hover:underline underline-offset-4" href="/Tametime">
+            Go to your app
+          </Link>
         </nav>
         {session?.user ? <UserAccontNav user={session.user}/> :    <Link href="/sign-in" 
         className={cn(buttonVariants({variant: "default"} ))}>Login</Link> }
