@@ -76,7 +76,7 @@ model Weeklyavailability{
   dayOfWeek    Week
    start       String
   end         String
-  timeSlot    TimeSlot[]
+  timeSlot    TimeSlot?
   userId      String
   user         User    @relation(fields: [userId], references: [id] , onDelete: Cascade)
   createdAt   DateTime @default(now())
@@ -127,13 +127,13 @@ enum Status{
 } 
 
 enum Week{
-   Monday
-   Tuesday
-   Wednesday
-   Thursday
-   Friday
-   Saturday
-   Sunday
+   MONDAY
+   TUESDAY
+   WEDNESDAY
+   THURSDAY
+   FRIDAY
+   SATURDAY
+   SUNDAY
 }
 
 model TimeSlot{
@@ -141,6 +141,6 @@ model TimeSlot{
   id     String @id @default(cuid())
   start  String
   end    String
-  WeekId  String
+  WeekId  String  @unique
   daySlot   Weeklyavailability  @relation(fields: [WeekId], references: [id], onDelete:Cascade)
 }

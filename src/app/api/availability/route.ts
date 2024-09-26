@@ -24,7 +24,7 @@ export async function POST(req: Request) {
         userId: session.user.id
       }
     })
-    return new Response("OK")
+    return new Response(`Availability created for ${day}`)
   }
   catch (error: any) {
     return new Response(error)
