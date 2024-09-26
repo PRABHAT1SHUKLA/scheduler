@@ -19,7 +19,9 @@ export function  UserAccontNav({user}: userAccountNavProps){
       
       <DropdownMenuTrigger>
       <Avatar>
-      <Image src={user.image} alt="@shadcn" />
+      <div className="relative aspect-square h-full w-full"> 
+      <Image fill src={user.image} alt="@shadcn" />
+      </div>
       <AvatarFallback>CN</AvatarFallback>
     </Avatar>
         

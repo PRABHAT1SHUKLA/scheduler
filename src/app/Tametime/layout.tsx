@@ -1,5 +1,6 @@
+import Sidebar from "@/components/Sidebar";
 import { getAuthSession } from "@/lib/auth";
-import { Sidebar } from "lucide-react";
+
 import { redirect } from "next/navigation";
 import React from "react";
 
