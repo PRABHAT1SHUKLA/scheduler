@@ -13,20 +13,14 @@ import {
   SelectValue,
 } from "./ui/select";
 import { timeSlots } from "@/lib/data"
+import { Button } from "./ui/button"
+import { Availability } from "@/types/availability"
 
-const days = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday"
-]
+
 
 interface availabilityProps {
 
-  initialData: {} || null
+  initialData: Availability
 
 }
 
@@ -41,7 +35,7 @@ export default function AvailabilityForm({ initialData }: availabilityProps) {
     handleSubmit,
     watch,
     setValue,
-    formState: { errors },
+    formState: { errors , isSubmitting},
 
   } = useForm<FormData>({
     resolver: zodResolver(availabilitySchema),
@@ -157,9 +151,9 @@ export default function AvailabilityForm({ initialData }: availabilityProps) {
 
 
       }
-      {error && <div className="text-red-500 text-sm">{error?.message}</div>}
-      <Button type="submit" disabled={loading}>
-        {loading ? "Updating..." : "Update Availability"}
+      {/* {error && <div className="text-red-500 text-sm">{error?.message}</div>} */}
+      <Button type="submit" disabled={isSubmitting}>
+        {isSubmitting ? "Updating..." : "Update Availability"}
       </Button>
 
 

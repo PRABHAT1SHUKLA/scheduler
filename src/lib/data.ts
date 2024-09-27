@@ -1,3 +1,5 @@
+import { Availability } from "@/types/availability";
+
 export const timeSlots = [
   "00:00",
   "00:30",
@@ -49,7 +51,7 @@ export const timeSlots = [
   "23:30",
 ];
 
-export const defaultAvailability = {
+export const defaultAvailability : Availability = {
   monday: { isAvailable: false, startTime: "09:00", endTime: "17:00" },
   tuesday: { isAvailable: false, startTime: "09:00", endTime: "17:00" },
   wednesday: { isAvailable: false, startTime: "09:00", endTime: "17:00" },
