@@ -1,3 +1,5 @@
+"use client"
+
 import { availabilitySchema } from "@/lib/validators/availability"
 import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -18,19 +20,33 @@ import { Availability } from "@/types/availability"
 
 
 
+
+
+type FormData = z.infer<typeof availabilitySchema>;
+
 interface availabilityProps {
 
-  initialData: Availability
+  initialData: FormData
 
 }
 
-type FormData = z.infer<typeof availabilitySchema>;
+type Day = "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday";
+
+const days: Day[] = ["monday",
+  "tuesday",
+  "wednesday",
+  "thursday",
+  "friday",
+  "saturday",
+  "sunday",
+]
+
 
 
 export default function AvailabilityForm({ initialData }: availabilityProps) {
 
   const {
-    register,
+    //register,
     control,
     handleSubmit,
     watch,
@@ -42,12 +58,12 @@ export default function AvailabilityForm({ initialData }: availabilityProps) {
     defaultValues: { ...initialData },
   })
 
-  const { mutate } = useMutation({
+  // const { mutate } = useMutation({
 
-  })
+  // })
 
-  const onSubmit = async ({ data }: FormData) => {
-
+  const onSubmit = async ( data : FormData) => {
+   console.log(data)
     setTimeout(() => {
       console.log(data)
     }, 3000)
@@ -56,15 +72,8 @@ export default function AvailabilityForm({ initialData }: availabilityProps) {
 
   return (
     <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-      {["monday",
-        "tuesday",
-        "wednesday",
-        "thursday",
-        "friday",
-        "saturday",
-        "sunday",
-      ].map((day) => {
-        const isAvailable = watch(`${day}.isAvailable`);
+      {days.map((day) => {
+        const isAvailable = watch(`${day}.isAvailable` );
 
         return (
           <div key={day} className='flex items-center space-x-4 mb-4'>
@@ -73,7 +82,7 @@ export default function AvailabilityForm({ initialData }: availabilityProps) {
               control={control}
               render={({ field }) => (
                 <Checkbox
-                  checked={field.value}
+                  checked={typeof field.value === 'boolean' ? field.value : false}
                   onCheckedChange={(checked) => {
                     setValue(`${day}.isAvailable`, checked);
                     if (!checked) {

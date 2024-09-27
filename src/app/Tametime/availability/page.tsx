@@ -4,7 +4,7 @@ import { defaultAvailability } from "@/lib/data";
 export default function availability(){
   return (
     <div>
-      return <AvailabilityForm initialData = {defaultAvailability}/>
+       <AvailabilityForm initialData = {defaultAvailability}/>
     </div>  
   )
 }
