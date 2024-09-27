@@ -1,29 +1,31 @@
 import { availabilitySchema } from "@/lib/validators/availability"
-import { useForm } from "react-hook-form"
-import {zodResolver} from "@hookform/resolvers/zod"
+import { Controller, useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { useMutation } from "@tanstack/react-query"
+import { Checkbox } from "./ui/checkbox"
+import axios from "axios"
 
-const days =[
+const days = [
   "Monday",
   "Tuesday",
   "Wednesday",
   "Thursday",
   "Friday",
   "Saturday",
-  "Sunday" 
+  "Sunday"
 ]
 
-interface availabilityProps{
-    
-  initialData : {}
+interface availabilityProps {
+
+  initialData: {} || null
 
 }
 
-type FormData = z.infer<typeof  availabilitySchema>;
+type FormData = z.infer<typeof availabilitySchema>;
 
 
-export default function AvailabilityForm({initialData}:availabilityProps){
+export default function AvailabilityForm({ initialData }: availabilityProps) {
 
   const {
     register,
@@ -31,22 +33,45 @@ export default function AvailabilityForm({initialData}:availabilityProps){
     handleSubmit,
     watch,
     setValue,
-    formState:{errors},
+    formState: { errors },
 
   } = useForm<FormData>({
     resolver: zodResolver(availabilitySchema),
-    defaultValues: {...initialData},
+    defaultValues: { ...initialData },
   })
 
-  const  {mutate : UpdateAvailability , isLoading} =
-   useMutation({
-     mutationFn : async() =>{
+  const onSubmit = async ({ data }: FormData) => {
 
-     }
-   })
+    setTimeout(() => {
+      console.log(data)
+    }, 3000)
 
-   return(
-    
-   )
+  }
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      {[
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday",
+      ].map((day) =>{
+         <div key={day} className="flex items-center space-x-4 mb-4">
+          <Controller 
+            name={`${day}.isAvailable`} />
+         </div>
+
+
+        return()
+      })
+      
+      
+      }
+    </form>
+  )
+
 
 }
