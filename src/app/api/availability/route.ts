@@ -56,6 +56,24 @@ export async function POST(req: NextApiRequest,res:NextApiResponse) {
 
     await db.weeklyavailability.update({
       where:{ id: user.availability.id},
+      data:{
+        timeGap: parsedData.timeGap,
+        days:{
+          deleteMany:{},//deletes all existing data
+          create: availabilityData,
+        }
+      }
+    })
+   } else{
+    await db.weeklyavailability.create({
+      data:{
+        userId: user.id,
+        timeGap: parsedData.timeGap,
+        days:{
+          create: availabilityData,
+        }
+
+      }
     })
    }
 
