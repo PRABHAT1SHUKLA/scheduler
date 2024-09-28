@@ -73,13 +73,14 @@ model VerificationToken {
 }
 //todo : to make it more optimizable by including timeslot array as an array unde weklyavailability
 model Weeklyavailability{
-  id          String @id @default(cuid())
-  dayOfWeek    Week
-   start       String
-  end         String
-  timeSlot    TimeSlot?
-  userId      String
-  user         User    @relation(fields: [userId], references: [id] , onDelete: Cascade)
+   id          String   @id @default(uuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id])
+
+  days        DayAvailability[]
+
+  timeGap     Int      // Minimum gap between bookings in minutes
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
