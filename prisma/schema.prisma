@@ -24,9 +24,9 @@ model User {
   sessions      Session[]
   availability  Weeklyavailability[]
   username      String?   @unique
-  override       Override[]
-  event          Event[]
-  bookings       Bookings[]
+
+ events       Event[]  @relation("UserEvents")
+  bookings     Booking[] @relation("UserBookings")
  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -84,39 +84,38 @@ model Weeklyavailability{
 }
 
 
-model Override{
-   id String @id @default(cuid())
-   date DateTime
-   userId String
-   start String
-   end   String
-   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  }
 
 
-model Event{
-  id          String @id @default(cuid())
-  eventTitle  String  
-  eventType   String
+model Event {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
   duration    Int
   userId      String
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User     @relation("UserEvents", fields: [userId], references: [id])
+  bookings    Booking[]
+  isPrivate   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 
 
-model Bookings{
-  id     String @id @default(cuid())
-  userId String
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  clientName String
-  clientEmail  String  @unique
-  date   DateTime
-  start  String
-  end    String
-  status  Status   @default(PENDING)
-  note    String?
+model Booking {
+  id             String  @id @default(uuid())
+  eventId        String
+  event          Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User    @relation("UserBookings", fields: [userId], references: [id])
+  name           String   // Name of the person booking the event
+  email          String   // Email of the person booking the event
+  additionalInfo String?  // Optional additional information from the person booking
+  startTime      DateTime
+  endTime        DateTime
+  meetLink       String  // Google Meet link for the booking
+  googleEventId  String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
  
 

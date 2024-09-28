@@ -1,7 +1,7 @@
 "use client"
 
 import { availabilitySchema } from "@/lib/validators/availability"
-import { Controller, useForm } from "react-hook-form"
+import { Controller, useForm,SubmitHandler } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { useMutation } from "@tanstack/react-query"
@@ -45,6 +45,7 @@ const days: Day[] = ["monday",
 
 export default function AvailabilityForm({ initialData }: availabilityProps) {
 
+  console.log(initialData)
   const {
     //register,
     control,
@@ -62,19 +63,16 @@ export default function AvailabilityForm({ initialData }: availabilityProps) {
 
   // })
 
-  const onSubmit = async ( data : FormData) => {
-   console.log(data)
-    setTimeout(() => {
-      console.log(data)
-    }, 3000)
-
-  }
+  const onSubmit: SubmitHandler<FormData> = (data) =>{
+    console.log("hello")
+    console.log(data)
+   }
 
   return (
     <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
       {days.map((day) => {
         const isAvailable = watch(`${day}.isAvailable` );
-
+        console.log(isAvailable)
         return (
           <div key={day} className='flex items-center space-x-4 mb-4'>
             <Controller
@@ -150,19 +148,13 @@ export default function AvailabilityForm({ initialData }: availabilityProps) {
 
               </>
             )}
-
-
-
-
-          </div>
+        </div>
         )
-      })
-
-
-      }
+      })}
       {/* {error && <div className="text-red-500 text-sm">{error?.message}</div>} */}
-      <Button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Updating..." : "Update Availability"}
+      
+      <Button type="submit" >
+        Submit
       </Button>
 
 
