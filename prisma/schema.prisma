@@ -121,11 +121,16 @@ model Booking {
 }
  
 
-enum Status{
-  PENDING  
-  CONFIRMED
-  CANCELED
-} 
+model DayAvailability {
+  id             String @id @default(uuid())
+  availabilityId String
+  day            Week
+  startTime      DateTime
+  endTime        DateTime
+  
+  availability Weeklyavailability @relation(fields: [availabilityId], references: [id], onDelete: Cascade)
+}
+
 
 enum Week{
    MONDAY
