@@ -141,12 +141,3 @@ enum Week{
    SATURDAY
    SUNDAY
 }
-
-model TimeSlot{
-  
-  id     String @id @default(cuid())
-  start  String
-  end    String
-  WeekId  String  @unique
-  daySlot   Weeklyavailability  @relation(fields: [WeekId], references: [id], onDelete:Cascade)
-}
