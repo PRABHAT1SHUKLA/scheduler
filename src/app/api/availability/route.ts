@@ -3,6 +3,7 @@ import { db } from "@/lib/db"
 import { NextResponse } from "next/server"
 import { availabilitySchema } from "@/lib/validators/availability"
 import { NextApiRequest, NextApiResponse } from "next"
+import z from "zod"
 
 //route handles admin request for availability creation
 export async function POST(req: NextApiRequest, res: NextApiResponse) {
