@@ -1,7 +1,7 @@
 import { db } from '@/lib/db'
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import { nanoid } from 'nanoid'
-import { NextAuthOptions, getServerSession } from 'next-auth'
+import { NextAuthOptions, getServerSession ,Session} from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 
 export const authOptions: NextAuthOptions = {
@@ -16,31 +16,26 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      authorization: { params: { scope: 'https://www.googleapis.com/auth/calendar' } }, // Make sure you request Google Calendar scope
     }),
   ],
   callbacks: {
-    async session({ token, session }) {
-      if (token) {
-        session.user.id = token.id
-        session.user.name = token.name
-        session.user.email = token.email
-        session.user.image = token.picture
-        session.user.username = token.username
+    async jwt({ token, user, account }) {
+      // When the user signs in, store the accessToken
+      if (account?.access_token && user) {
+        token.accessToken = account.access_token;
+        return token
       }
 
-      return session
-    },
-
-    async jwt({ token, user }) {
       const dbUser = await db.user.findFirst({
         where: {
           email: token.email!,
         },
-      })
+      });
 
       if (!dbUser) {
-        token.id = user!.id
-        return token
+        token.id = user!.id;
+        return token;
       }
 
       if (!dbUser.username) {
@@ -51,7 +46,7 @@ export const authOptions: NextAuthOptions = {
           data: {
             username: nanoid(10),
           },
-        })
+        });
       }
 
       return {
@@ -60,13 +55,27 @@ export const authOptions: NextAuthOptions = {
         email: dbUser.email,
         picture: dbUser.image,
         username: dbUser.username,
-      }
+        accessToken: token.accessToken, // Ensure accessToken is passed on
+      };
     },
+
+    async session({ token, session }) {
+      if (token) {
+        session.user.id = token.id;
+        session.user.name = token.name;
+        session.user.email = token.email;
+        session.user.image = token.picture;
+        session.user.username = token.username;
+        
+      }
+
+      return session;
+    },
+
     redirect() {
-        console.log("redirect triggered")
-      return '/'
+      return '/';
     },
   },
-}
+};
 
-export const getAuthSession = () => getServerSession(authOptions)
+export const getAuthSession = () => getServerSession(authOptions);

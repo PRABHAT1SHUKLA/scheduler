@@ -7,88 +7,88 @@ import {
     parseISO,
     isBefore,
     addMinutes,
-  } from "date-fns";
+} from "date-fns";
 import { NextApiRequest } from "next";
 import { NextApiResponse } from "next";
 
-interface Bookings{
+interface Bookings {
     startTime: Date,
     endTime: Date,
 }
 
-interface GenerateAvailableTimeSlotsParams{
+interface GenerateAvailableTimeSlotsParams {
     startTime: Date,
-    endTime:Date,
+    endTime: Date,
     bookings: Bookings[],
-    duration:number,
+    duration: number,
     dateStr: string,
     timeGap?: number
 }
 
-export async function POST(req: NextApiRequest, res:NextApiResponse){
-    try{
-        const {eventId} = req.body
+export async function POST(req: NextApiRequest, res: NextApiResponse) {
+    try {
+        const { eventId } = req.body
 
-        if(!eventId){
+        if (!eventId) {
             return res.status(400).json({
-                message:"Missing eventId"
+                message: "Missing eventId"
             })
         }
 
 
         const event = await db.event.findUnique({
-            where:{id:eventId},
-            include:{
-                user:{
-                    include:{
-                        availability:{
-                            select:{
-                                days:true,
+            where: { id: eventId },
+            include: {
+                user: {
+                    include: {
+                        availability: {
+                            select: {
+                                days: true,
                                 timeGap: true,
                             },
                         },
-                        bookings:{
-                            select:{
-                                startTime:true,
-                                endTime:true,
+                        bookings: {
+                            select: {
+                                startTime: true,
+                                endTime: true,
                             }
                         }
-                        
+
                     }
                 }
             }
         });
 
-        
 
-        if(!event || !event.user.availability){
+
+        if (!event || !event.user.availability) {
             return res.status(404).json({
-                msg:" event or avoilability not found"
+                msg: " event or avoilability not found"
             })
         }
 
-        const {availability, bookings}= event.user
+        const { availability, bookings } = event.user
 
-        const startDate= startOfDay(new Date())
+        const startDate = startOfDay(new Date())
 
         const endDate = addDays(startDate, 30)
 
-        const availableDates =[];
+        const availableDates = [];
 
 
-        let date=startDate
+        let date = startDate
 
-        for(date ; date<=endDate; date=addDays(date,1)){
-            const dayOfWeek= format(date,"EEEE").toUpperCase();
+        for (date; date <= endDate; date = addDays(date, 1)) {
+            const dayOfWeek = format(date, "EEEE").toUpperCase();
 
             const dayAvailability = availability?.days?.find(
-                (d)=>d.day === dayOfWeek
+                (d) => d.day === dayOfWeek
             )
 
-            if(dayAvailability){
-                const dateStr = format(date,"yyyy-MM-dd");
+            if (dayAvailability) {
+                const dateStr = format(date, "yyyy-MM-dd");
 
-                const slots= generateAvailableTimeSlots({
+                const slots = generateAvailableTimeSlots({
 
                     startTime: dayAvailability.startTime,
                     endTime: dayAvailability.endTime,
@@ -97,77 +97,78 @@ export async function POST(req: NextApiRequest, res:NextApiResponse){
                     dateStr: dateStr,
                     timeGap: availability.timeGap,
 
-            });
+                });
                 availableDates.push({
-                    date:dateStr,
+                    date: dateStr,
                     slots
                 });
             }
         }
 
-     return res.status(200).json({availableDates})
+        return res.status(200).json({ availableDates })
 
 
 
 
-  
 
-    
+
+
 
     }
-    catch(error){
+    catch (error) {
         return res.status(500).json({
-            msg:"error fetching event availability"
+            msg: "error fetching event availability"
         });
     }
-    
+
 
 
 }
 
-function generateAvailableTimeSlots(
-    {startTime,
-    endTime,
-    duration,
-    bookings,
-    dateStr,
-    timeGap = 0}:GenerateAvailableTimeSlotsParams
-  ) : string[]{
-    const slots:string[] = [];
+function generateAvailableTimeSlots({
+ startTime,
+ endTime,
+ duration,
+ bookings,
+ dateStr,
+ timeGap = 0 }: GenerateAvailableTimeSlotsParams): string[] {
+    const slots: string[] = [];
     let currentTime = parseISO(
-      `${dateStr}T${startTime.toISOString().slice(11, 16)}`
+        `${dateStr}T${startTime.toISOString().slice(11, 16)}`
     );
     const slotEndTime = parseISO(
-      `${dateStr}T${endTime.toISOString().slice(11, 16)}`
+        `${dateStr}T${endTime.toISOString().slice(11, 16)}`
     );
-  
+
     // If the date is today, start from the next available slot after the current time
     const now = new Date();
     if (format(now, "yyyy-MM-dd") === dateStr) {
-      currentTime = isBefore(currentTime, now)
-        ? addMinutes(now, timeGap)
-        : currentTime;
+        currentTime = isBefore(currentTime, now)
+            ? addMinutes(now, timeGap)
+            : currentTime;
     }
-  
+
     while (currentTime < slotEndTime) {
-      const slotEnd = new Date(currentTime.getTime() + duration * 60000);
-  
-      const isSlotAvailable = !bookings.some((booking) => {
-        const bookingStart = booking.startTime;
-        const bookingEnd = booking.endTime;
-        return (
-          (currentTime >= bookingStart && currentTime < bookingEnd) ||
-          (slotEnd > bookingStart && slotEnd <= bookingEnd) ||
-          (currentTime <= bookingStart && slotEnd >= bookingEnd)
-        );
-      });
-  
-      if (isSlotAvailable) {
-        slots.push(format(currentTime, "HH:mm"));
-      }
-  
-      currentTime = slotEnd;
+        const slotEnd = new Date(currentTime.getTime() + duration * 60000);
+
+        const isSlotAvailable = !bookings.some((booking) => {
+            const bookingStart = booking.startTime;
+            const bookingEnd = booking.endTime;
+            return (
+                (currentTime >= bookingStart && currentTime < bookingEnd) ||
+                (slotEnd > bookingStart && slotEnd <= bookingEnd) ||
+                (currentTime <= bookingStart && slotEnd >= bookingEnd)
+            );
+        });
+
+        if (isSlotAvailable) {
+            slots.push(format(currentTime, "HH:mm"));
+        }
+
+        currentTime = slotEnd;
     }
-  
+
     return slots;
-  }
+}
+
+
