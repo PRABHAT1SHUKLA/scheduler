@@ -59,6 +59,8 @@ export async function POST(req: NextApiRequest, res:NextApiResponse){
             }
         });
 
+        
+
         if(!event || !event.user.availability){
             return res.status(404).json({
                 msg:" event or avoilability not found"
@@ -86,16 +88,16 @@ export async function POST(req: NextApiRequest, res:NextApiResponse){
             if(dayAvailability){
                 const dateStr = format(date,"yyyy-MM-dd");
 
-                const slots= generateAvailableTimeSlots(
+                const slots= generateAvailableTimeSlots({
 
-                    dayAvailability.startTime,
-                    dayAvailability.endTime,
-                    event.duration,
-                    bookings,
-                    dateStr,
-                    availability.timeGap
+                    startTime: dayAvailability.startTime,
+                    endTime: dayAvailability.endTime,
+                    duration: event.duration,
+                    bookings: bookings,
+                    dateStr: dateStr,
+                    timeGap: availability.timeGap,
 
-                );
+            });
                 availableDates.push({
                     date:dateStr,
                     slots
@@ -130,8 +132,8 @@ function generateAvailableTimeSlots(
     bookings,
     dateStr,
     timeGap = 0}:GenerateAvailableTimeSlotsParams
-  ) {
-    const slots = [];
+  ) : string[]{
+    const slots:string[] = [];
     let currentTime = parseISO(
       `${dateStr}T${startTime.toISOString().slice(11, 16)}`
     );
