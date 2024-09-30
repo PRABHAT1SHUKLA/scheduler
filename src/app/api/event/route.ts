@@ -9,9 +9,23 @@ import {
     addMinutes,
   } from "date-fns";
 import { NextApiRequest } from "next";
-import { NextResponse } from "next/server";
+import { NextApiResponse } from "next";
 
-export async function POST(req: NextApiRequest, res:NextResponse){
+interface Bookings{
+    startTime: Date,
+    endTime: Date,
+}
+
+interface GenerateAvailableTimeSlotsParams{
+    startTime: Date,
+    endTime:Date,
+    bookings: Bookings[],
+    duration:number,
+    dateStr: string,
+    timeGap?: number
+}
+
+export async function POST(req: NextApiRequest, res:NextApiResponse){
     try{
         const {eventId} = req.body
 
@@ -81,28 +95,28 @@ export async function POST(req: NextApiRequest, res:NextResponse){
                     dateStr,
                     availability.timeGap
 
-                )
+                );
+                availableDates.push({
+                    date:dateStr,
+                    slots
+                });
             }
         }
 
+     return res.status(200).json({availableDates})
 
 
 
 
-    // await db.event.create({
-    //     data:{
-    //         duration: duration,
-    //         userId: session.user.id,
-    //         eventType: eventType
+  
 
-    //     }
-    // })
-
-    return new Response("OK")
+    
 
     }
     catch(error){
-        return new Response("Sorry")
+        return res.status(500).json({
+            msg:"error fetching event availability"
+        });
     }
     
 
@@ -110,12 +124,12 @@ export async function POST(req: NextApiRequest, res:NextResponse){
 }
 
 function generateAvailableTimeSlots(
-    startTime,
+    {startTime,
     endTime,
     duration,
     bookings,
     dateStr,
-    timeGap = 0
+    timeGap = 0}:GenerateAvailableTimeSlotsParams
   ) {
     const slots = [];
     let currentTime = parseISO(
