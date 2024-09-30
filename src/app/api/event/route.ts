@@ -60,6 +60,32 @@ export async function POST(req: NextApiRequest, res:NextResponse){
         const availableDates =[];
 
 
+        let date=startDate
+
+        for(date ; date<=endDate; date=addDays(date,1)){
+            const dayOfWeek= format(date,"EEEE").toUpperCase();
+
+            const dayAvailability = availability?.days?.find(
+                (d)=>d.day === dayOfWeek
+            )
+
+            if(dayAvailability){
+                const dateStr = format(date,"yyyy-MM-dd");
+
+                const slots= generateAvailableTimeSlots(
+
+                    dayAvailability.startTime,
+                    dayAvailability.endTime,
+                    event.duration,
+                    bookings,
+                    dateStr,
+                    availability.timeGap
+
+                )
+            }
+        }
+
+
 
 
 
