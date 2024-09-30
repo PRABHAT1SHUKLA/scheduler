@@ -1,26 +1,76 @@
 import { getAuthSession } from "@/lib/auth"
 import { db } from "@/lib/db"
+import {
+    startOfDay,
+    addDays,
+    format,
+    parseISO,
+    isBefore,
+    addMinutes,
+  } from "date-fns";
+import { NextApiRequest } from "next";
+import { NextResponse } from "next/server";
 
-export async function POST(req: Request){
+export async function POST(req: NextApiRequest, res:NextResponse){
     try{
-        const body = await req.json()
+        const {eventId} = req.body
 
-    const { duration , eventType } = body
-
-    const session = await getAuthSession()
-
-    if(!session?.user){
-        return new Response("User not Authorized", { status: 401 })
-    }
-
-    await db.event.create({
-        data:{
-            duration: duration,
-            userId: session.user.id,
-            eventType: eventType
-
+        if(!eventId){
+            return res.status(400).json({
+                message:"Missing eventId"
+            })
         }
-    })
+
+
+        const event = await db.event.findUnique({
+            where:{id:eventId},
+            include:{
+                user:{
+                    include:{
+                        availability:{
+                            select:{
+                                days:true,
+                                timeGap: true,
+                            },
+                        },
+                        bookings:{
+                            select:{
+                                startTime:true,
+                                endTime:true,
+                            }
+                        }
+                        
+                    }
+                }
+            }
+        });
+
+        if(!event || !event.user.availability){
+            return res.status(404).json({
+                msg:" event or avoilability not found"
+            })
+        }
+
+        const {availability, bookings}= event.user
+
+        const startDate= startOfDay(new Date())
+
+        const endDate = addDays(startDate, 30)
+
+        const availableDates =[];
+
+
+
+
+
+    // await db.event.create({
+    //     data:{
+    //         duration: duration,
+    //         userId: session.user.id,
+    //         eventType: eventType
+
+    //     }
+    // })
 
     return new Response("OK")
 
