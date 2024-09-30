@@ -29,7 +29,7 @@ export async function deleteEvent(eventId:string){
    })
 
    if(!event || event.userId !== user.id){
-    throw new Error("Event not found or uaauthorized")
+    throw new Error("Event not found or unauthorized")
    }
 
    await db.event.delete({
