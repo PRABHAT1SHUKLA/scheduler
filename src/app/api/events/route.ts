@@ -41,10 +41,42 @@ export async function POST(req: NextApiRequest, res: NextApiResponse){
 }
 
 
-export async function GET(){
+export async function GET(res:NextApiResponse){
   const session = await getAuthSession()
 
-  if(!session !! !session?.user){
-    
+  if(!session || !session?.user){
+    return new Response("user not authorized", {
+      status : 401
+    }) 
   }
+
+  const user = await db.user.findUnique({
+    where:{
+      id : session.user.id
+
+    }
+  })
+
+  if(!user ){
+    return new Response("user not found")
+  }
+
+  const events = await db.event.findMany({
+    where:{
+      userId: user.id
+    },
+    orderBy:{
+      createdAt: "desc"
+    },
+    include:{
+      _count:{
+        select:{bookings:true},
+      },
+    },
+  });
+
+  return res.status(200).json({
+     events,
+     username: user.name
+  })
 }
