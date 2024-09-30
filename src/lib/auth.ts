@@ -23,7 +23,7 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user, account }) {
       // When the user signs in, store the accessToken
       if (account?.access_token && user) {
-        token.accessToken = account.access_token;
+        token.access_token = account.access_token;
         return token
       }
 
@@ -66,6 +66,7 @@ export const authOptions: NextAuthOptions = {
         session.user.email = token.email;
         session.user.image = token.picture;
         session.user.username = token.username;
+        
         
       }
 

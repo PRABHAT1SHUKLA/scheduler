@@ -1,7 +1,7 @@
 import { authOptions, getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { NextApiRequest } from "next";
-import { getServerSession } from "next-auth";
+import {google} from "googleapis"
 import { getToken } from "next-auth/jwt";
 
 const secret = process.env.NEXTAUTH_SECRET
@@ -26,7 +26,63 @@ export async function POST(req: NextApiRequest) {
   
 
     const token = await getToken({req,secret})
-    const accessToken = token?.accessToken
+  
+
+
+
+
+     
+    const oauth2Client = new google.auth.OAuth2();
+    oauth2Client.setCredentials({access_token:token});
+
+
+    const calendar= google.calendar({
+      version: 'v3',
+      auth:oauth2Client
+    });
+
+    const meetResponse = await calendar.events.insert({
+      calendarId: "primary",
+      conferenceDataVersion:1,
+      requestBody:{
+        summary:`${bookingData.name} - ${event?.title}`,
+        description: bookingData.additionalInfo,
+        start:{dateTime: bookingData.startTime},
+        end:{dateTime: bookingData.endTime},
+        attendees:[{ email:bookingData.email} , {
+          email: event?.user.email 
+        }],
+        conferenceData:{
+          createRequest:{
+            requestId:`${event?.id}-${Date.now()}`
+          },
+        },
+      },
+    }),
+    
+    const meetLink = meetResponse.data.hangoutLink;
+    const googleEventId = meetResponse.data.id;
+    
+    if(!meetLink || !googleEventId){
+      return new Response("unable to create meetlink")
+    }
+
+    const booking= await db.booking.create({
+      data:{
+        eventId: event?.id,
+        userId: event?.userId,
+        name:bookingData.name,
+        email:bookingData.email,
+        startTime:bookingData.startTime,
+        endTime:bookingData.endTime,
+        additionalInfo:bookingData.additionalInfo,
+        meetLink,
+        googleEventId,
+      },
+    });
+
+    return {success: true ,booking, meetLink}
+
 
     // Check if the user is authenticated
   
