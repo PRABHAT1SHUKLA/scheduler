@@ -62,7 +62,7 @@ export async function getEventDetails(username: string, eventId : string){
         },
       },
     },
-   }),
+   })
 
    return event ;
 
