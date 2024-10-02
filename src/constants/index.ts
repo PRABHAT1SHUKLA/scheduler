@@ -1,4 +1,4 @@
-import { Clock, User, Calendar, Settings  } from 'lucide-react'
+import { Clock, User, Calendar, Settings, Projector  } from 'lucide-react'
 export const sidebarLinks = [
 
   {
@@ -21,4 +21,9 @@ export const sidebarLinks = [
     route: "/Tametime/settings",
     label: "settings",
   },
+  {
+    icon:Projector,
+    route: "/Tametime/dashboard",
+    label: "dashboard",
+  }
 ];

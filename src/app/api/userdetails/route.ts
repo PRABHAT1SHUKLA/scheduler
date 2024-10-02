@@ -8,7 +8,7 @@ export async function POST(
 ){
 
   const {username} =  req.body
-
+  
   const user = await db.user.findUnique({
     where:{ username },
     select:{
@@ -35,15 +35,8 @@ export async function POST(
             }
           }
 
-        }
-
-    } 
-
-       
-
-
-
-    }
+        }} 
+   }
   });
 
   return  res.status(200).json({
