@@ -1,8 +1,8 @@
 import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { NextApiRequest } from "next";
+import { NextApiRequest, NextApiResponse } from "next";
 
-export async function POST(req:NextApiRequest){
+export async function POST(req:NextApiRequest, res:NextApiResponse){
   const session = await getAuthSession()
 
   if(!session || !session?.user){
@@ -11,7 +11,7 @@ export async function POST(req:NextApiRequest){
     })
   }
 
-  const username  = await req.body
+  const {username}  = await req.body
 
    const existingUser  =  await db.user.findUnique({
     where:{
@@ -25,5 +25,14 @@ export async function POST(req:NextApiRequest){
        return new Response("username is already taken")
     }
 
-    
+    await db.user.update({
+      where:{ id : userId},
+      data:{username}
+    })
+
+
+    return res.status(200).json({
+      msg:"username updated"
+    })
 }
+
