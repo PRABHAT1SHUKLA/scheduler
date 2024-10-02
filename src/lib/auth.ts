@@ -16,22 +16,39 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          access_type: 'offline',
+          prompt: 'consent',
+          scope: [
+            'openid',
+            'https://www.googleapis.com/auth/userinfo.email',
+            'https://www.googleapis.com/auth/userinfo.profile',
+            'https://www.googleapis.com/auth/calendar',
+            // and more scope urls
+          ].join(' '),
+          response: 'code',
+        },
+      },
     }),
   ],
+  
   callbacks: {
-    async session({ token, session }) {
-      if (token) {
-        session.user.id = token.id
-        session.user.name = token.name
-        session.user.email = token.email
-        session.user.image = token.picture
-        session.user.username = token.username
+
+    async jwt({ token, user , account }) {
+      //Initial sign in
+      
+     if(account && user){
+      return {
+        accessToken: account.access_token,
+        accessTokenExpires: account.expires_in,
+        refreshToken: account.refresh_token,
+        idToken: account.id_token,
+        user,
       }
+     }
 
-      return session
-    },
 
-    async jwt({ token, user }) {
       const dbUser = await db.user.findFirst({
         where: {
           email: token.email!,
@@ -60,8 +77,28 @@ export const authOptions: NextAuthOptions = {
         email: dbUser.email,
         picture: dbUser.image,
         username: dbUser.username,
+        token,
       }
     },
+
+
+     async session({ token, session }) {
+      if (token) {
+        session.user.id = token.id
+        session.user.name = token.name
+        session.user.email = token.email
+        session.user.image = token.picture
+        session.user.username = token.username
+        session.accessToken= token.user
+        session.idToken= token.idToken
+        session.refreshToken= token.refreshToken
+
+      }
+
+      return session
+    },
+
+    
     redirect() {
         console.log("redirect triggered")
       return '/'

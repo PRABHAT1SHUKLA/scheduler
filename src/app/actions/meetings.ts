@@ -53,3 +53,23 @@ export async function getUserMeetings({type="upcoming"} : meetingProps){
   return meetings;
 
 }
+
+export async function cancelMeeting(meetingId : string){
+  const session = await getAuthSession()
+
+  if(!session || !session?.user){
+    throw new Error("not Authorized")
+  }
+
+  const user = await db.user.findUnique({
+    where:{
+      id: session.user.id
+    }
+  })
+
+  if(!user){
+    throw new Error("User not found")
+  }
+
+  const meeting 
+}
