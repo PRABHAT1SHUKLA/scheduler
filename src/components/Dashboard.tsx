@@ -1,34 +1,65 @@
 "use client"
 
+import { toast } from "@/hooks/use-toast";
 import { UsernameValidator } from "@/lib/validators/username";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/Card'
+import { Input } from '@/components/ui/Input'
+import { Label } from '@/components/ui/Label'
+import { Button } from "./ui/button";
 
 
 type FormData = z.infer<typeof UsernameValidator>
 
 
 export default function Dashboardpage(){
-
-  const [ userName , setUserName] =  useState("")
   
-   const { data : session  , status} = useSession()
+  const router = useRouter()
+ 
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(UsernameValidator),
+    defaultValues:{
+      name:
+    } 
+  })
 
-   if(!session){
-    return <p> You are not logged in</p>
-   }
 
-   if(status === "loading"){
-    return <p> Loading...</p>
-   }
 
-   useEffect(() => {
-    if (session?.user?.username) {
-      setUserName(session.user.username);
-    }
-  }, [session]);
+  // const [ userName , setUserName] =  useState("")
+  
+  //  const { data : session  , status} = useSession()
+
+  //  if(!session){
+  //   return <p> You are not logged in</p>
+  //  }
+
+  //  if(status === "loading"){
+  //   return <p> Loading...</p>
+  //  }
+
+  //  useEffect(() => {
+  //   if (session?.user?.username) {
+  //     setUserName(session.user.username);
+  //   }
+  // }, [session]);
 
   const { mutate: updateUsername , isLoading} =
   useMutation({
@@ -58,7 +89,14 @@ export default function Dashboardpage(){
    
 
 
-    }
+    },
+    onSuccess:() =>{
+      toast({
+        description: 'Your username has been updated.',
+      })
+      router.refresh()
+
+    },
 
 
 
@@ -71,8 +109,46 @@ export default function Dashboardpage(){
 
 
   
-  return (
-    <div> {` Welcome ${userName}`}</div>
+  return (<>
+     <div> {` Welcome ${userName}`}</div>
+     <form
+     
+      onSubmit={handleSubmit((e) => updateUsername(e))}
+      >
+      <Card>
+        <CardHeader>
+          <CardTitle>Your username</CardTitle>
+          <CardDescription>
+            Please enter a display name you are comfortable with.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className='relative grid gap-1'>
+            <div className='absolute top-0 left-0 w-8 h-10 grid place-items-center'>
+              <span className='text-sm text-zinc-400'>u/</span>
+            </div>
+            <Label className='sr-only' htmlFor='name'>
+              Name
+            </Label>
+            <Input
+              id='name'
+              className='w-[400px] pl-6'
+              size={32}
+              {...register('name')}
+            />
+            {errors?.name && (
+              <p className='px-1 text-xs text-red-600'>{errors.name.message}</p>
+            )}
+          </div>
+        </CardContent>
+        <CardFooter>
+          <Button isLoading={isLoading}>Change name</Button>
+        </CardFooter>
+      </Card>
+    </form>
+  </>
+  
+
   )
    
 
